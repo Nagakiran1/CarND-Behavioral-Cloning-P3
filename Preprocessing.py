@@ -81,7 +81,7 @@ def Image_Preprocessing(Drivinglog):
     #1. Reading all training images and the driving log csv to create Train features and predicting variable data.
     CenterImages = np.concatenate([cv2.cvtColor(cv2.imread(load_dir +file), cv2.COLOR_BGR2RGB)[np.newaxis] for file in Drivinglog[Drivinglog.columns[0]].tolist()])
 #     a = Drivinglog[Drivinglog.columns[3]].astype(float)
-#     y_data = (a + ((((~a.between(-0.05,0.01))  & (a.gt(0.01))).astype(int) * 0.05) + (((~a.between(-0.05,0.01))  & (a.lt(-0.01))).astype(int) * -0.05))).values[:,None]
+  #   y_data = (a + ((((~a.between(-0.05,0.01))  & (a.gt(0.01))).astype(int) * 0.05) + (((~a.between(-0.05,0.01))  & (a.lt(-0.01))).astype(int) * -0.05))).values[:,None]
     y_data = Drivinglog[Drivinglog.columns[3]].astype(float).values[:,None]
     
     #FlipedCenterImages = np.concatenate([cv2.flip(image,1)[np.newaxis] for image in CenterImages])
@@ -98,10 +98,10 @@ def Image_Preprocessing(Drivinglog):
     print('Changing Brightness of image data ... ')
     
     # 4. Concatenating all augmented data
-    X_data = np.concatenate((CenterImages, TranslatedImages, RBrightnesImages))
-    y_data = np.concatenate((y_data, TranslatedSangle, y_data))
-#     X_data = CenterImages #RBrightnesImages
-#     y_data = y_data
+#     X_data = np.concatenate((CenterImages, TranslatedImages, RBrightnesImages))
+#     y_data = np.concatenate((y_data, TranslatedSangle, y_data))
+    X_data = CenterImages #RBrightnesImages
+    y_data = y_data
     
     # 5. Splitting the data to train, test and valid randomly
     x_train, x_test, y_train, y_test = train_test_split(X_data, y_data, test_size=0.1, random_state=42)
@@ -117,8 +117,7 @@ def Image_Preprocessing(Drivinglog):
  
 load_dir = '../Data/SampleData/data/'
 Drivinglog = pd.read_csv(load_dir + 'driving_log.csv')
-Drivinglog = pd.concat([Drivinglog[Drivinglog.steering.ne(0)],Drivinglog[Drivinglog.steering.between(-0.01,0.01)][:600]]).reset_index(drop=True)
-Drivinglog = Drivinglog.sample(100)
+Drivinglog = pd.concat([Drivinglog[Drivinglog.steering.ne(0)],Drivinglog[Drivinglog.steering.between(-0.01,0.01)][:300]]).reset_index(drop=True)
 Image_Preprocessing(Drivinglog)
 
         
